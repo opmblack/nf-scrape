@@ -399,6 +399,7 @@ function SearchForm({
   history, 
   inputRef,
   initialValue,
+  resetKey,
 }: { 
   onSearch: (id: string) => void;
   onBatchSearch: (ids: string[]) => void;
@@ -406,6 +407,7 @@ function SearchForm({
   history: SearchHistoryItem[];
   inputRef: React.RefObject<HTMLInputElement | null>;
   initialValue: string;
+  resetKey: number;
 }) {
   const [videoId, setVideoId] = useState(initialValue);
   const [showHistory, setShowHistory] = useState(false);
@@ -414,6 +416,10 @@ function SearchForm({
   useEffect(() => {
     setVideoId(initialValue);
   }, [initialValue]);
+
+  useEffect(() => {
+    setVideoId('');
+  }, [resetKey]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -465,16 +471,26 @@ function SearchForm({
           onClick={() => setIsBatchMode(!isBatchMode)}
           title="Toggle batch mode"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <rect x="3" y="3" width="7" height="7" />
-            <rect x="14" y="3" width="7" height="7" />
-            <rect x="14" y="14" width="7" height="7" />
-            <rect x="3" y="14" width="7" height="7" />
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="3" width="7" height="7" rx="1.5" />
+            <rect x="14" y="3" width="7" height="7" rx="1.5" />
+            <rect x="14" y="14" width="7" height="7" rx="1.5" />
+            <rect x="3" y="14" width="7" height="7" rx="1.5" />
           </svg>
         </button>
 
         <button type="submit" className="search-button" disabled={isLoading || !videoId.trim()}>
-          {isLoading ? <span className="loading-spinner" /> : 'Search'}
+          {isLoading ? (
+            <span className="loading-spinner" />
+          ) : (
+            <>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="7" />
+                <path d="M21 21l-4.35-4.35" />
+              </svg>
+              Search
+            </>
+          )}
         </button>
 
         {showHistory && filteredHistory.length > 0 && (
@@ -484,6 +500,10 @@ function SearchForm({
                 key={item.id}
                 type="button"
                 className="history-item"
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  handleHistoryClick(item.id);
+                }}
                 onClick={() => handleHistoryClick(item.id)}
               >
                 <span className="history-id">{item.id}</span>
@@ -501,20 +521,20 @@ function ThemeToggle({ theme, onToggle }: { theme: 'dark' | 'light'; onToggle: (
   return (
     <button className="theme-toggle" onClick={onToggle} title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}>
       {theme === 'dark' ? (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <circle cx="12" cy="12" r="5" />
-          <line x1="12" y1="1" x2="12" y2="3" />
-          <line x1="12" y1="21" x2="12" y2="23" />
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-          <line x1="1" y1="12" x2="3" y2="12" />
-          <line x1="21" y1="12" x2="23" y2="12" />
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="4.5" />
+          <path d="M12 2v2" />
+          <path d="M12 20v2" />
+          <path d="M4.93 4.93l1.41 1.41" />
+          <path d="M17.66 17.66l1.41 1.41" />
+          <path d="M2 12h2" />
+          <path d="M20 12h2" />
+          <path d="M4.93 19.07l1.41-1.41" />
+          <path d="M17.66 6.34l1.41-1.41" />
         </svg>
       ) : (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 12.5a9 9 0 1 1-9.5-9.5A7 7 0 0 0 21 12.5z" />
         </svg>
       )}
     </button>
@@ -526,7 +546,12 @@ function AnalyticsPanel({ analytics, onClose }: { analytics: AnalyticsData; onCl
     <div className="analytics-panel">
       <div className="analytics-header">
         <h3>Analytics</h3>
-        <button className="close-btn" onClick={onClose}>&times;</button>
+        <button className="close-btn" onClick={onClose} title="Close">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M18 6 6 18" />
+            <path d="M6 6l12 12" />
+          </svg>
+        </button>
       </div>
       <div className="analytics-grid">
         <div className="analytics-stat">
@@ -578,7 +603,12 @@ function Lightbox({ image, onClose }: { image: { url: string; label: string }; o
 
   return (
     <div className="lightbox" onClick={onClose}>
-      <button className="lightbox-close">&times;</button>
+      <button className="lightbox-close" title="Close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M18 6 6 18" />
+          <path d="M6 6l12 12" />
+        </svg>
+      </button>
       <div className="lightbox-content" onClick={e => e.stopPropagation()}>
         <img src={image.url} alt={image.label} />
         <p className="lightbox-label">{image.label}</p>
@@ -599,8 +629,8 @@ function CopyButton({ text, label }: { text: string; label: string }) {
 
   return (
     <button className="copy-btn" onClick={handleCopy} title={`Copy ${label}`}>
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="9" y="9" width="13" height="13" rx="2" />
         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
       </svg>
     </button>
@@ -630,9 +660,28 @@ function ExportMenu({ entity, onClose }: { entity: NetflixEntity; onClose: () =>
 
   return (
     <div className="export-menu" onClick={e => e.stopPropagation()}>
-      <button onClick={() => handleExport('json')}>Export JSON</button>
-      <button onClick={() => handleExport('markdown')}>Export Markdown</button>
-      <button onClick={handleShare}>Copy Share Link</button>
+      <button onClick={() => handleExport('json')}>
+        <svg className="menu-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <path d="M14 2v6h6" />
+        </svg>
+        Export JSON
+      </button>
+      <button onClick={() => handleExport('markdown')}>
+        <svg className="menu-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M4 20V4" />
+          <path d="M4 4h8l4 4h4v12" />
+        </svg>
+        Export Markdown
+      </button>
+      <button onClick={handleShare}>
+        <svg className="menu-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+          <path d="M12 16V2" />
+          <path d="m16 6-4-4-4 4" />
+        </svg>
+        Copy Share Link
+      </button>
     </div>
   );
 }
@@ -698,10 +747,10 @@ function TitleHeader({ entity, onExport }: { entity: NetflixEntity; onExport: ()
           <div className="title-actions">
             <AvailabilityBadge isAvailable={entity.isAvailable} typename={entity.__typename} />
             <button className="export-btn" onClick={onExport} title="Export / Share">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
-                <polyline points="16 6 12 2 8 6" />
-                <line x1="12" y1="2" x2="12" y2="15" />
+                <path d="M12 16V2" />
+                <path d="m16 6-4-4-4 4" />
               </svg>
             </button>
           </div>
@@ -861,7 +910,20 @@ function ComparisonView({ entities, onClose }: { entities: NetflixEntity[]; onCl
     <div className="comparison-view">
       <div className="comparison-header">
         <h2>Comparison Mode</h2>
-        <button className="close-btn" onClick={onClose}>&times;</button>
+        <div className="comparison-actions">
+          <button className="back-btn" onClick={onClose} title="Back to search">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+            Back
+          </button>
+          <button className="close-btn" onClick={onClose} title="Close comparison">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 6 6 18" />
+              <path d="M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
       </div>
       <div className="comparison-grid">
         {entities.map((entity, idx) => (
@@ -922,8 +984,8 @@ function MetadataDisplay({
         </div>
         
         <div className="content-sidebar">
-          <ArtworkGallery entity={entity} onImageClick={onImageClick} />
           <TechnicalInfo entity={entity} />
+          <ArtworkGallery entity={entity} onImageClick={onImageClick} />
         </div>
       </div>
     </div>
@@ -936,6 +998,7 @@ function ErrorDisplay({ message }: { message: string }) {
       <div className="error-icon">!</div>
       <h2>Something went wrong</h2>
       <p>{message}</p>
+      <p className="error-hint">Check the Video ID and try again.</p>
     </div>
   );
 }
@@ -946,6 +1009,7 @@ function EmptyState({ onExampleClick }: { onExampleClick: (id: string) => void }
       <div className="empty-icon">N</div>
       <h2>Netflix Metadata Explorer</h2>
       <p>Enter a Netflix Video ID to explore detailed metadata, quality info, and artwork.</p>
+      <p className="empty-subtext">Supports batch comparisons, shareable links, and export tools.</p>
       <div className="example-ids">
         <span className="example-label">Try:</span>
         <button onClick={() => onExampleClick('82156122')}>82156122</button>
@@ -971,6 +1035,8 @@ function App() {
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [showAnalytics, setShowAnalytics] = useState(false);
   const [rateLimit, setRateLimit] = useState({ remaining: 100, limit: 100 });
+  const [resetCount, setResetCount] = useState(0);
+  const [showBackToTop, setShowBackToTop] = useState(false);
   
   const searchInputRef = useRef<HTMLInputElement>(null);
   
@@ -1064,6 +1130,16 @@ function App() {
     }
   }, [trackSearch]);
 
+  const handleBack = useCallback(() => {
+    setData(null);
+    setComparisonData([]);
+    setError(null);
+    setLightboxImage(null);
+    setShowExportMenu(false);
+    setVideoIdToURL('');
+    setResetCount(prev => prev + 1);
+  }, [setVideoIdToURL]);
+
   // Load initial video from URL
   useEffect(() => {
     if (initialVideoId) {
@@ -1084,6 +1160,15 @@ function App() {
     },
     onToggleTheme: toggleTheme,
   });
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 300);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const entity = data?.data?.unifiedEntities?.[0];
 
@@ -1114,6 +1199,7 @@ function App() {
             history={history}
             inputRef={searchInputRef}
             initialValue={initialVideoId}
+            resetKey={resetCount}
           />
           
           <div className="header-actions">
@@ -1124,10 +1210,10 @@ function App() {
               onClick={() => setShowAnalytics(!showAnalytics)}
               title="Analytics"
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <line x1="18" y1="20" x2="18" y2="10" />
-                <line x1="12" y1="20" x2="12" y2="4" />
-                <line x1="6" y1="20" x2="6" y2="14" />
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 20V10" />
+                <path d="M12 20V4" />
+                <path d="M18 20v-6" />
               </svg>
             </button>
             
@@ -1136,14 +1222,22 @@ function App() {
               onClick={clearHistory}
               title="Clear history"
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <polyline points="3 6 5 6 21 6" />
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 6h18" />
+                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                <path d="M10 11v6" />
+                <path d="M14 11v6" />
               </svg>
             </button>
             
             <ThemeToggle theme={theme} onToggle={toggleTheme} />
           </div>
+        </div>
+        <div className="header-hints">
+          <span><kbd>Ctrl</kbd>+<kbd>K</kbd> Focus</span>
+          <span><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd> Theme</span>
+          <span><kbd>Esc</kbd> Clear</span>
         </div>
       </header>
 
@@ -1157,6 +1251,16 @@ function App() {
           <EmptyState onExampleClick={handleSearch} />
         )}
         {isLoading && <SkeletonLoader />}
+        {!isLoading && (entity || comparisonData.length > 0) && (
+          <div className="back-row">
+            <button className="back-btn" onClick={handleBack} title="Back to search">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+              Back to search
+            </button>
+          </div>
+        )}
         {comparisonData.length > 0 && (
           <ComparisonView entities={comparisonData} onClose={() => setComparisonData([])} />
         )}
@@ -1177,6 +1281,20 @@ function App() {
         <div className="modal-backdrop" onClick={() => setShowExportMenu(false)}>
           <ExportMenu entity={entity} onClose={() => setShowExportMenu(false)} />
         </div>
+      )}
+
+      {showBackToTop && (
+        <button
+          className="back-to-top"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          title="Back to top"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 19V5" />
+            <path d="m6 11 6-6 6 6" />
+          </svg>
+          Top
+        </button>
       )}
 
       <footer className="app-footer">
